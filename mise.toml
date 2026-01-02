@@ -1,0 +1,21 @@
+[env]
+ANDROID_BUILD_TOOLS_VERSION = "36.1.0"
+ANDROID_NDK_VERSION = "29.0.14206865"
+ANDROID_HOME = "D:\\Android\\Sdk"
+ANDROID_SDK_ROOT = "{{env.ANDROID_HOME}}"
+ANDROID_AVD_HOME = "D:\\avd"
+ANDROID_BUILD_TOOLS = "{{env.ANDROID_SDK_ROOT}}\\build-tools\\{{env.ANDROID_BUILD_TOOLS_VERSION}}"
+NDK_HOME = "{{env.ANDROID_SDK_ROOT}}\\ndk\\{{env.ANDROID_NDK_VERSION}}"
+ADB_MDNS = "0"
+_.path = [
+    "{{env.ANDROID_SDK_ROOT}}\\cmdline-tools\\bin",
+    "{{env.ANDROID_SDK_ROOT}}\\emulator",
+    "{{env.ANDROID_SDK_ROOT}}\\platform-tools",
+    "{{env.ANDROID_SDK_ROOT}}\\tools",
+    "{{env.ANDROID_SDK_ROOT}}\\tools\\bin",
+    "{{env.NDK_HOME}}",
+    "{{env.ANDROID_BUILD_TOOLS}}"
+]
+
+[tools]
+pnpm = "latest"
