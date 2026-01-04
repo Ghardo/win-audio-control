@@ -43,6 +43,18 @@
                 @pan-end="isDragging = false"
               />
             </div>
+            <div class="row q-gutter-xs justify-between q-pr-sm q-py-sm">
+              <q-btn
+                v-for="n in 11"
+                :key="n"
+                :label="(n - 1) * 10"
+                size="xs"
+                dense
+                :color="[0, 5, 10].includes(n - 1) ? 'primary' : 'grey-9'"
+                class="col" 
+                @click="updateVolume(session.pid, (n - 1) / 10)"
+              />
+            </div>
           </q-item-section>
 
           <q-item-section side style="padding-left: 8px;">
@@ -106,16 +118,22 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 import { invoke } from '@tauri-apps/api/core';
+import { getCurrentWindow, LogicalSize } from '@tauri-apps/api/window';
 
 const sessions = ref([]);
 let intervalId = null;
 const isDragging = ref(false); 
+const MAX_HEIGHT = 640;
+let initialWidth = null;
+let initialHeight = null;
 
 async function fetchSessions() {
   if (isDragging.value) return;
 
   try {
-    const data = await invoke('get_audio_sessions');    
+    const data = await invoke('get_audio_sessions');  
+    let requestedHeight = (data.length * 100) + 80;
+    updateWindowSize(requestedHeight);
     sessions.value = data;
   } catch (e) {
     console.error('Fehler:', e);
@@ -157,6 +175,22 @@ onMounted(() => {
 onUnmounted(() => {
   if (intervalId) clearInterval(intervalId);
 });
+
+async function updateWindowSize(requestedHeight) {
+  const appWindow = getCurrentWindow();
+
+    if (initialWidth === null) {
+      const physicalSize = await appWindow.innerSize();
+      const factor = await appWindow.scaleFactor();
+      initialWidth = physicalSize.width / factor;
+    }
+
+    const newHeight = Math.max(initialHeight, requestedHeight);
+    const targetHeight = Math.min(newHeight, MAX_HEIGHT);
+    console.log(targetHeight)
+
+    await appWindow.setSize(new LogicalSize(initialWidth, targetHeight));
+}
 </script>
 
 <style scoped>

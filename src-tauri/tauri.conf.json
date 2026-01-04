@@ -13,7 +13,7 @@
     "windows": [
       {
         "title": "Win Audio Control",
-        "width": 600,
+        "width": 700,
         "height": 400,
         "resizable": false,
         "fullscreen": false
